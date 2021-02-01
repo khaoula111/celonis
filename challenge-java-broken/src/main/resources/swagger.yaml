@@ -1,0 +1,180 @@
+swagger: '2.0'
+info:
+  description: This is the api for the Celonis Programming Challenge
+  version: 1.0.0
+  title: Celonis Programming Challenge
+host: pure-plains-73336.herokuapp.com
+basePath: /api
+schemes:
+  - https
+paths:
+  /tasks:
+    post:
+      tags:
+        - tasks
+      summary: Create a new task
+      description: ''
+      operationId: createTask
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: task to create
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectGenerationTask'
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ProjectGenerationTask'
+        '405':
+          description: Invalid input
+    get:
+      tags:
+        - tasks
+      summary: list all tasks
+      description: ''
+      operationId: listTasks
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/ProjectGenerationTask'
+  '/tasks/{id}':
+    get:
+      tags:
+        - tasks
+      summary: get a tasks by id
+      description: ''
+      operationId: getTask
+      parameters:
+        - name: id
+          in: path
+          description: id of task to return
+          required: true
+          type: string
+          format: uuid
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ProjectGenerationTask'
+        '404':
+          description: not found
+    put:
+      tags:
+        - tasks
+      summary: update a tasks by id
+      description: ''
+      operationId: updateTask
+      parameters:
+        - name: id
+          in: path
+          description: id of task to update
+          required: true
+          type: string
+          format: uuid
+        - in: body
+          name: body
+          description: updated task
+          required: true
+          schema:
+            $ref: '#/definitions/ProjectGenerationTask'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: successful operation
+          schema:
+            $ref: '#/definitions/ProjectGenerationTask'
+        '404':
+          description: not found
+    delete:
+      tags:
+        - tasks
+      summary: delete a tasks by id
+      description: ''
+      operationId: deleteTask
+      parameters:
+        - name: id
+          in: path
+          description: id of task to delete
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: successful operation
+        '404':
+          description: not found
+  '/tasks/{id}/execute':
+    post:
+      tags:
+        - tasks
+      summary: execute a tasks by id
+      description: ''
+      operationId: executeTask
+      parameters:
+        - name: id
+          in: path
+          description: id of task to execute
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '204':
+          description: successful operation
+        '404':
+          description: not found
+  '/tasks/{id}/result':
+    get:
+      tags:
+        - tasks
+      summary: downloads the task result
+      description: ''
+      operationId: downloadTaskResult
+      parameters:
+        - name: id
+          in: path
+          description: id of task to get result
+          required: true
+          type: string
+          format: uuid
+      responses:
+        '200':
+          description: successfull operation
+          schema:
+            type: file
+        '404':
+          description: not found
+securityDefinitions:
+  api_key:
+    type: apiKey
+    name: Celonis-Auth
+    in: header
+security:
+  - api_key: []
+definitions:
+  ProjectGenerationTask:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+      name:
+        type: string
+      creationDate:
+        type: string
+        format: date-time
